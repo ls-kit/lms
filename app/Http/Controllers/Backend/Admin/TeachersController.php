@@ -186,7 +186,9 @@ class TeachersController extends Controller
         $teacher->update($request->except('email'));
         if ($request->has('image')) {
             $teacher->avatar_type = 'storage';
-            $teacher->avatar_location = $request->image->store('/avatars', 'public');
+            $filename = 'teacher-image' . '-' . time() . '.' . $request->image->getClientOriginalExtension();
+            $path = $request->image->storeAs('public/avatars', $filename);
+            $teacher->avatar_location = 'avatars/'.$filename;
         }
         $teacher->active = isset($request->active)?1:0;
         $teacher->save();
